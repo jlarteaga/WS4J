@@ -64,20 +64,8 @@ public class MatrixCalculator {
     }
 
     public static double[][] getSynonymyMatrix(String[] words1, String[] words2) {
-        List<Set<String>> synonyms1 = new ArrayList<>(words1.length);
-        Arrays.asList(words1).forEach(aWords1 -> {
-            Set<String> synonyms = new HashSet<>();
-            Arrays.asList(POS.values()).forEach(pos -> db.getAllConcepts(aWords1, pos)
-                    .forEach(concept -> synonyms.add(concept.getSynsetID())));
-            synonyms1.add(synonyms);
-        });
-        List<Set<String>> synonyms2 = new ArrayList<>(words2.length);
-        Arrays.asList(words2).forEach(aWords2 -> {
-            Set<String> synonyms = new HashSet<>();
-            Arrays.asList(POS.values()).forEach(pos -> db.getAllConcepts(aWords2, pos)
-                    .forEach(concept -> synonyms.add(concept.getSynsetID())));
-            synonyms2.add(synonyms);
-        });
+        List<Set<String>> synonyms1 = getSynonyms(words1);
+        List<Set<String>> synonyms2 = getSynonyms(words2);
         double[][] result = new double[words1.length][words2.length];
         for (int i = 0; i < words1.length; i++) {
             for (int j = 0; j < words2.length; j++) {
@@ -93,5 +81,16 @@ public class MatrixCalculator {
             }
         }
         return result;
+    }
+
+    private static List<Set<String>> getSynonyms(String[] words) {
+        List<Set<String>> synonymsList = new ArrayList<>(words.length);
+        Arrays.asList(words).forEach(aWords1 -> {
+            Set<String> synonyms = new HashSet<>();
+            Arrays.asList(POS.values()).forEach(pos -> db.getAllConcepts(aWords1, pos)
+                    .forEach(concept -> synonyms.add(concept.getSynsetID())));
+            synonymsList.add(synonyms);
+        });
+        return synonymsList;
     }
 }
