@@ -3,7 +3,10 @@ package edu.uniba.di.lacam.kdde.ws4j;
 import edu.uniba.di.lacam.kdde.lexical_db.ILexicalDatabase;
 import edu.uniba.di.lacam.kdde.lexical_db.data.Concept;
 import edu.uniba.di.lacam.kdde.lexical_db.item.POS;
-import edu.uniba.di.lacam.kdde.ws4j.util.*;
+import edu.uniba.di.lacam.kdde.ws4j.util.DepthFinder;
+import edu.uniba.di.lacam.kdde.ws4j.util.MatrixCalculator;
+import edu.uniba.di.lacam.kdde.ws4j.util.PathFinder;
+import edu.uniba.di.lacam.kdde.ws4j.util.WordSimilarityCalculator;
 
 import java.util.List;
 
@@ -53,6 +56,14 @@ public abstract class RelatednessCalculator {
 
     public double[][] getNormalizedSimilarityMatrix(String[] words1, String[] words2) {
         return MatrixCalculator.getNormalizedSimilarityMatrix(words1, words2, this);
+    }
+
+    public double[][] getSimilarityMatrix(Concept[] synsets1, Concept [] synsets2) {
+        return MatrixCalculator.getSimilarityMatrix(synsets1, synsets2, this);
+    }
+
+    public double[][] getNormalizedSimilarityMatrix(Concept[] synsets1, Concept [] synsets2) {
+        return MatrixCalculator.getNormalizedSimilarityMatrix(synsets1, synsets2, this);
     }
 
     public ILexicalDatabase getLexicalDB() {
