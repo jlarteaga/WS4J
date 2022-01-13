@@ -1,6 +1,7 @@
 package edu.uniba.di.lacam.kdde.ws4j.util;
 
 import edu.uniba.di.lacam.kdde.lexical_db.ILexicalDatabase;
+import edu.uniba.di.lacam.kdde.lexical_db.data.Concept;
 import edu.uniba.di.lacam.kdde.lexical_db.item.POS;
 import edu.uniba.di.lacam.kdde.ws4j.RelatednessCalculator;
 
@@ -25,21 +26,41 @@ public class MatrixCalculator {
         return result;
     }
 
+    public static double[][] normalizeSimilarityMatrix(double[][] matrix) {
+        double greatestValue = 1.0D;
+        for (double[] score : matrix) {
+            for (double aScore : score) {
+                if (aScore > greatestValue && aScore != Double.MAX_VALUE) greatestValue = aScore;
+            }
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] == Double.MAX_VALUE) matrix[i][j] = 1;
+                else matrix[i][j] /= greatestValue;
+            }
+        }
+        return matrix;
+    }
+
+    public static double[][] getSimilarityMatrix(Concept[] concept1, Concept[] concepts2, RelatednessCalculator rc) {
+        double[][] result = new double[concept1.length][concepts2.length];
+        for (int i = 0; i < concept1.length; i++) {
+            for (int j = 0; j < concepts2.length; j++) {
+                double score = rc.calcRelatednessOfSynsets(concept1[i], concepts2[j]).getScore();
+                result[i][j] = score;
+            }
+        }
+        return result;
+    }
+
     public static double[][] getNormalizedSimilarityMatrix(String[] words1, String[] words2, RelatednessCalculator rc) {
         double[][] scores = getSimilarityMatrix(words1, words2, rc);
-        double bestScore = 1.0D;
-        for (double[] score : scores) {
-            for (double aScore : score) {
-                if (aScore > bestScore && aScore != Double.MAX_VALUE) bestScore = aScore;
-            }
-        }
-        for (int i = 0; i < scores.length; i++) {
-            for (int j = 0; j < scores[i].length; j++) {
-                if (scores[i][j] == Double.MAX_VALUE) scores[i][j] = 1;
-                else scores[i][j] /= bestScore;
-            }
-        }
-        return scores;
+        return normalizeSimilarityMatrix(scores);
+    }
+
+    public static double[][] getNormalizedSimilarityMatrix(Concept[] concepts1, Concept[] concepts2, RelatednessCalculator rc) {
+        double[][] scores = getSimilarityMatrix(concepts1, concepts2, rc);
+        return normalizeSimilarityMatrix(scores);
     }
 
     public static double[][] getSynonymyMatrix(String[] words1, String[] words2) {
