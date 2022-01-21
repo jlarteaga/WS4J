@@ -28,9 +28,9 @@
             <version>1.8.4</version>
         </dependency>
         <dependency>
-            <groupId>com.github.rm-hull</groupId>
+            <groupId>com.github.jlarteaga</groupId>
             <artifactId>jwi</artifactId>
-            <version>7d37b0d23d</version>
+            <version>80596d8</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
